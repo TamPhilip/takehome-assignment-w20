@@ -1,40 +1,64 @@
 <template>
   <div>
-    <!-- PART 1: Pass in a "complete" prop here -->
-    <Instructions />
-    <!-- PART 4: Modify the Show component to accept all of these props -->
+    <Instructions :complete="true"/>
     <Show
       v-for="show in shows"
       :key="show.id"
       :id="show.id"
       :name="show.name"
-      :episodes_seen="show.episodes_seen"
+      :episodesSeen="show.episodesSeen"
     />
+    <Input/>
   </div>
 </template>
 
 <script>
 import Instructions from "./Instructions.vue";
 import Show from "./Show.vue";
+import Input from "./Input.vue"
+import {eventBus} from "@/eventBus.js";
 
 export default {
   components: {
     Instructions,
-    Show
+    Show,
+    Input
   },
   data() {
     return {
       shows: [
-        { id: 1, name: "Game of Thrones", episodes_seen: 0 },
-        { id: 2, name: "Naruto", episodes_seen: 220 },
-        { id: 3, name: "Black Mirror", episodes_seen: 3 }
+        { id: 1, name: "Game of Thrones", episodesSeen: 0 },
+        { id: 2, name: "Naruto", episodesSeen: 220 },
+        { id: 3, name: "Black Mirror", episodesSeen: 3 }
       ]
     };
-  }
+  },
+  created() {
+    eventBus.$on("incrementCount", (id) => {
+      this.shows[id-1].episodesSeen += 1;
+    });
+    eventBus.$on("decreaseCount", (id) => {
+      this.shows[id-1].episodesSeen -= 1;
+    });
+    eventBus.$on("createShow", (showName) => {
+      const show = {
+        id: this.shows.length + 1,
+        name: showName,
+        episodesSeen: 0
+      }
+      this.shows.push(show);
+    })
+  },
+  beforeDestroy() {
+    eventBus.$off("incrementCount");
+    eventBus.$off("decreaseCount");
+    eventBus.$off("createShow");
+  },
 };
 </script>
 
-<style>
+<style scoped>
+
 </style>
 
 

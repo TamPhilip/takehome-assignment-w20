@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
-    <router-view></router-view>
+    <h1> Philip Tam's Hack4Impact Challenge </h1>
+    <router-view/>
   </div>
 </template>
 

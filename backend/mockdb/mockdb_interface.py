@@ -22,6 +22,7 @@ def create(type, payload):
 
 def updateById(type, id, update_values):
     item = getById(type, id)
+    print(item)
     if item is None:
         return None
     for k, v in update_values.items():
